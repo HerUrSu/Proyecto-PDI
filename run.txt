@@ -1,8 +1,0 @@
-g++ run_orbslam3_zed.cpp -o run_orbslam3_zed -I<path_to_orbslam3_include> -I<path_to_zed_sdk_include> -L<path_to_orbslam3_lib> -L<path_to_zed_sdk_lib> -lORB_SLAM3 -lsl_core -lsl_zed -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc -lopencv_features2d -lopencv_calib3d
-
-path_to_orbslam3_include: /home/pipeub/Dev/ORB_SLAM3/include
-path_to_zed_sdk_include: /usr/local/zed/include
-path_to_orbslam3_lib: /home/pipeub/Dev/ORB_SLAM3/lib
-path_to_zed_sdk_lib: /usr/local/zed/lib
-
-g++ run_orbslam3_zed.cpp -o run_orbslam3_zed -I /home/pipeub/Dev/opencv/modules/core/include -I /home/pipeub/Dev/ORB_SLAM3/include -I /home/pipeub/Dev/opencv/build -I /usr/local/zed/include -I /home/pipeub/Dev/opencv/include/ -L /home/pipeub/Dev/ORB_SLAM3/lib -L /usr/local/zed/lib -lORB_SLAM3 -lsl_core -lsl_zed -lopencv_core -lopencv_imgcodecs -lopencv_highgui -lopencv_imgproc -lopencv_features2d -lopencv_calib3d
