@@ -41,17 +41,24 @@ find_package(OpenGL REQUIRED)
 find_package(Pangolin REQUIRED)
 
 # Buscar las bibliotecas de ZED SDK
-find_library(SL_CORE_LIB sl_core PATHS /usr/local/zed/lib)
-find_library(SL_ZED_LIB sl_zed PATHS /usr/local/zed/lib)
+# find_library(SL_CORE_LIB sl_core PATHS /usr/local/zed/lib)
+# find_library(SL_ZED_LIB sl_zed PATHS /usr/local/zed/lib)
+find_package(ZED 4 REQUIRED)
 
-if(NOT SL_CORE_LIB)
-    message(FATAL_ERROR "sl_core library not found in /usr/local/zed/lib")
+if(NOT ZED_FOUND)
+    message(FATAL_ERROR "ZED SDK not found. Please ensure it is installed correctly.")
 endif()
 
-if(NOT SL_ZED_LIB)
-    message(FATAL_ERROR "sl_zed library not found in /usr/local/zed/lib")
-endif()
+# if(NOT SL_CORE_LIB)
+#     message(FATAL_ERROR "sl_core library not found in /usr/local/zed/lib")
+# endif()
 
+# if(NOT SL_ZED_LIB)
+#     message(FATAL_ERROR "sl_zed library not found in /usr/local/zed/lib")
+# endif()
+
+message(STATUS "ZED Libraries: ${ZED_LIBRARIES}")
+message(STATUS "ZED Include Directories: ${ZED_INCLUDE_DIRS}")
 
 
 # Agregar bibliotecas necesarias
@@ -72,8 +79,7 @@ target_link_libraries(stereo_inertial_zed
     ${ORB_SLAM3_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so  # Biblioteca DBoW2
     ${ORB_SLAM3_DIR}/Thirdparty/g2o/lib/libg2o.so      # Biblioteca g2o
     ORB_SLAM3                                          # Biblioteca principal de ORB-SLAM3
-    ${SL_CORE_LIB}                                     # ZED SDK
-    ${SL_ZED_LIB}                                              # SDK de ZED
+    ${ZED_LIBRARIES}
     opencv_core
     opencv_imgproc
     opencv_highgui
