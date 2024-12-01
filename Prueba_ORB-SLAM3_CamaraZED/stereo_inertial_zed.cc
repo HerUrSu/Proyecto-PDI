@@ -3,8 +3,6 @@
 #include <opencv2/opencv.hpp>
 #include <signal.h>
 #include <iostream>
-#include <mutex>
-#include <condition_variable>
 
 using namespace std;
 using namespace sl;
@@ -19,7 +17,7 @@ void exit_loop_handler(int s) {
 int main(int argc, char **argv) {
     if (argc < 3 || argc > 4) {
         cerr << endl
-             << "Usage: ./stereo_inertial_zed path_to_vocabulary path_to_settings (trajectory_file_name)"
+             << "Usage: ./stereo_zed path_to_vocabulary path_to_settings (trajectory_file_name)"
              << endl;
         return 1;
     }
@@ -29,6 +27,7 @@ int main(int argc, char **argv) {
         file_name = string(argv[argc - 1]);
     }
 
+    // Configurar señal para salir del bucle
     struct sigaction sigIntHandler;
     sigIntHandler.sa_handler = exit_loop_handler;
     sigemptyset(&sigIntHandler.sa_mask);
@@ -37,43 +36,38 @@ int main(int argc, char **argv) {
 
     b_continue_session = true;
 
-    // Inicia la cámara ZED
+    // Inicializa la cámara ZED
     Camera zed;
     InitParameters init_params;
     init_params.camera_resolution = RESOLUTION::HD720;
     init_params.coordinate_units = UNIT::METER;
-    init_params.depth_mode = DEPTH_MODE::PERFORMANCE;
-    //init_params.input_type = INPUT_TYPE::USB; Esta linea da error
-    init_params.camera_fps = 30;
+    init_params.depth_mode = DEPTH_MODE::NONE;  // No necesitamos profundidad para ORB-SLAM3
+    init_params.camera_fps = 15;
 
     ERROR_CODE err = zed.open(init_params);
     if (err != ERROR_CODE::SUCCESS) {
-        cout << "No se pudo inicializar la cámara ZED: " << toString(err) << endl;
+        cerr << "No se pudo inicializar la cámara ZED: " << toString(err) << endl;
         return 1;
     }
-
-    RuntimeParameters runtime_params;
-    runtime_params = RuntimeParameters();
-    //runtime_params.sensing_mode = SENSING_MODE::STANDARD;
 
     int width = zed.getCameraInformation().camera_configuration.resolution.width;
     int height = zed.getCameraInformation().camera_configuration.resolution.height;
 
-    // Matrices para las imágenes
-    Mat left_image(width, height, MAT_TYPE::U8_C1);
-    Mat right_image(width, height, MAT_TYPE::U8_C1);
+    // Configura ORB-SLAM3 en modo estéreo
+    ORB_SLAM3::System SLAM(argv[1], argv[2], ORB_SLAM3::System::STEREO, true, 0, file_name);
+    float imageScale = SLAM.GetImageScale();
+
+    // Matrices para imágenes izquierda y derecha
+    Mat left_image, right_image;
+    left_image.alloc(width, height, MAT_TYPE::U8_C1);
+    right_image.alloc(width, height, MAT_TYPE::U8_C1);
 
     cv::Mat imLeftCV, imRightCV;
 
-    // Configura ORB-SLAM3
-    ORB_SLAM3::System SLAM(argv[1], argv[2], ORB_SLAM3::System::IMU_STEREO, true, 0, file_name);
-    float imageScale = SLAM.GetImageScale();
-
-    while (!SLAM.isShutDown()) {
-        if (!b_continue_session) break;
-
-        // Captura las imágenes izquierda y derecha
-        if (zed.grab(runtime_params) == ERROR_CODE::SUCCESS) {
+    // Bucle principal
+    while (b_continue_session && !SLAM.isShutDown()) {
+        // Captura imágenes estéreo de la cámara ZED
+        if (zed.grab() == ERROR_CODE::SUCCESS) {
             zed.retrieveImage(left_image, VIEW::LEFT_GRAY);
             zed.retrieveImage(right_image, VIEW::RIGHT_GRAY);
 
@@ -82,18 +76,21 @@ int main(int argc, char **argv) {
             imRightCV = cv::Mat(right_image.getHeight(), right_image.getWidth(), CV_8UC1, right_image.getPtr<sl::uchar1>());
 
             double timestamp = zed.getTimestamp(TIME_REFERENCE::IMAGE).getMilliseconds() * 1e-3;
-
+            cv::imshow("ZED View", imLeftCV);
             // Escalar imágenes si es necesario
             if (imageScale != 1.f) {
                 cv::resize(imLeftCV, imLeftCV, cv::Size(), imageScale, imageScale);
                 cv::resize(imRightCV, imRightCV, cv::Size(), imageScale, imageScale);
             }
 
-            // Envía las imágenes al sistema ORB-SLAM3
+            // Enviar imágenes al sistema ORB-SLAM3
             SLAM.TrackStereo(imLeftCV, imRightCV, timestamp);
+            //std::cout << "Image size: " << imLeftCV.cols << "x" << imLeftCV.rows << std::endl;
+
         }
     }
 
+    // Apagar sistema ORB-SLAM3
     cout << "Cerrando sistema..." << endl;
     SLAM.Shutdown();
     zed.close();
