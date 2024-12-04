@@ -8,25 +8,24 @@ File.version: "1.0"
 Camera.type: "PinHole"
 
 # Camera calibration and distortion parameters (OpenCV) 
-Camera1.fx: 534.0650
-Camera1.fy: 534.0900
-Camera1.cx: 651.1000
-Camera1.cy: 387.4550
-Camera1.k1: -1.5937
-Camera1.k2: 3.4202
-Camera1.p1: -0.0002
-Camera1.p2: -0.0001
-Camera1.k3: -0.0596
-
-Camera2.fx: 533.9400
-Camera2.fy: 533.8250
-Camera2.cx: 659.3000
-Camera2.cy: 390.1935
-Camera2.k1: -1.5144
-Camera2.k2: 2.9438
-Camera2.p1: -0.0002
-Camera2.p2: -0.0000
-Camera2.k3: 0.0886
+Camera1.fx: 527.183
+Camera1.fy: 527.183
+Camera1.cx: 662.459
+Camera1.cy: 393.863
+Camera1.k1: 0.0
+Camera1.k2: 0.0
+Camera1.p1: 0.0
+Camera1.p2: 0.0
+Camera1.k3: 0.0
+Camera2.fx: 527.183
+Camera2.fy: 527.183
+Camera2.cx: 662.459
+Camera2.cy: 393.863
+Camera2.k1: 0.0
+Camera2.k2: 0.0
+Camera2.p1: 0.0
+Camera2.p2: 0.0
+Camera2.k3: 0.0
 # Resolución y FPS
 Camera.width: 1280
 Camera.height: 720
@@ -40,18 +39,25 @@ Stereo.T_c1_c2: !!opencv-matrix
   rows: 4
   cols: 4
   dt: f
-  data: [9.99998720e-01, -1.59999835e-03, 1.75999889e-06, 119.8580,
-         1.59999932e-03, 9.99998115e-01, -1.09999837e-03, -0.1914,
-         1.05879118e-22, 1.09999978e-03, 9.99999395e-01, 0.5166,
-         0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
+  data: [1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.19859000e-01, 0.00000000e+00, 1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 0.00000000e+00, 1.00000000e+00]
+         
+IMU.T_b_c1: !!opencv-matrix
+  rows: 4
+  cols: 4
+  dt: f
+  data: [1.0,  0.0,  0.0,  0.0,     # Traslación x (supongamos -2 cm)
+         0.0,  1.0,  0.0,  0.0,      # Traslación y
+         0.0,  0.0,  1.0,  0.0,     # Traslación z (supongamos 3 cm hacia adelante)
+         0.0,  0.0,  0.0,  1.0]      # Parte homogénea
+
 
 
 # Configuración del IMU
-IMU.NoiseGyro: 1e-3
-IMU.NoiseAcc: 1e-2
-IMU.GyroWalk: 1e-5
-IMU.AccWalk: 1e-4
-IMU.Frequency: 200.0
+IMU.NoiseGyro: 0.00016  # Ruido del giroscopio (rad/s^0.5)
+IMU.NoiseAcc: 0.0032   # Ruido del acelerómetro (m/s^1.5)
+IMU.GyroWalk: 1.0e-05   # Deriva aleatoria del giroscopio
+IMU.AccWalk: 3.0e-03    # Deriva aleatoria del acelerómetro
+IMU.Frequency: 400.0    # Frecuencia del IMU (consultar en la documentación técnica)
 
 
 

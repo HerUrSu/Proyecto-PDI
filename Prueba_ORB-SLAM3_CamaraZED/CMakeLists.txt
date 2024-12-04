@@ -71,10 +71,10 @@ link_directories(
 include_directories(/usr/local/cuda/include)
 
 # Ejecutable
-add_executable(stereo_inertial_zed stereo_inertial_zed.cc)
+add_executable(stereo_zed stereo_zed.cc)
 
 # Enlazar bibliotecas
-target_link_libraries(stereo_inertial_zed
+target_link_libraries(stereo_zed
     ${OPENGL_LIBRARIES}
     ${ORB_SLAM3_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so  # Biblioteca DBoW2
     ${ORB_SLAM3_DIR}/Thirdparty/g2o/lib/libg2o.so      # Biblioteca g2o
