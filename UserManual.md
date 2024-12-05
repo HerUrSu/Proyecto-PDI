@@ -8,7 +8,9 @@ cd build
 make
 cmake ..
 ```
-## 2. Correr el programa
+## 2. Conectar la Cámara ZED por USB
+
+## 3. Correr el programa
 Luego, para correr el código, dentro de la carpeta build realizar el siguiente comando:
 ```
 ./stereo_zed path_to_vocabulary path_to_settings (trajectory_file_name)

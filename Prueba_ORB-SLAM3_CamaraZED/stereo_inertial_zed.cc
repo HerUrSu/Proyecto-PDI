@@ -31,8 +31,8 @@ public:
 int main(int argc, char **argv) {
     if (argc < 3 || argc > 4) {
         cerr << endl
-             << "Usage: ./stereo_inertial_zed path_to_vocabulary path_to_settings (trajectory_file_name)"
-             << endl;
+            << "Usage: ./stereo_inertial_zed path_to_vocabulary path_to_settings (trajectory_file_name)"
+            << endl;
         return 1;
     }
 
