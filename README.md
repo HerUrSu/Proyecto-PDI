@@ -15,4 +15,5 @@ Este repositorio contiene:
 
 Se muestra video que muestra el funcionamiento del sistema:
 
-[ORB-SLAM3 con Cámara ZED 2i - Grupo 6 PDI]([URL](https://www.youtube.com/watch?v=OupvtRrq7u8&ab_channel=GabrielD%C3%ADaz))
+ORB-SLAM3 con Cámara ZED 2i - Grupo 6 PDI
+https://www.youtube.com/watch?v=OupvtRrq7u8&ab_channel=GabrielD%C3%ADaz
