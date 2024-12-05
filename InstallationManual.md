@@ -108,7 +108,8 @@ cd ~/Dev/ORB_SLAM3
 
 Se descarga de la pagina oficial StereoLabs el ZED SDK:
 
-[Stereolabs - ZED SDK]([URL](https://www.stereolabs.com/en-cl/developers/release))
+Stereolabs - ZED SDK
+https://www.stereolabs.com/en-cl/developers/release
 
 Se descarga la version 4.2.2 dejando un archivo:
 
